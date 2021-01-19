@@ -2,8 +2,10 @@ package pl.sgnit.ims.views.util;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasValue;
+import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
+import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -19,16 +21,14 @@ import java.util.Map;
 
 public class QueryForm extends VerticalLayout {
 
-    private FormLayout fieldsForm = new FormLayout();
+    private final FormLayout fieldsForm = new FormLayout();
 
     private final Map<Field, HasValue<HasValue.ValueChangeEvent<String>, String>> fieldsMap = new HashMap<>();
 
     private final QueryableView queryable;
-    private final Class<? extends EntityTemplate> entityClass;
 
     public QueryForm(QueryableView queryable, Class<? extends EntityTemplate> entityClass) {
         this.queryable = queryable;
-        this.entityClass = entityClass;
         createComponents(entityClass);
         createButtons();
     }
@@ -82,6 +82,16 @@ public class QueryForm extends VerticalLayout {
     }
 
     private void countRecords() {
+        long recordCount = queryable.countRecords(prepareWhereCondition());
+        Dialog dialog = new Dialog();
+
+        dialog.add(new VerticalLayout(
+            new Text("Found "+recordCount+" records"),
+            new Button("Close", buttonClickEvent -> dialog.close())
+        ));
+        dialog.setCloseOnEsc(false);
+        dialog.setCloseOnOutsideClick(false);
+        dialog.open();
     }
 
     private void doUserQuery() {
@@ -90,7 +100,7 @@ public class QueryForm extends VerticalLayout {
     }
 
     private void resetFields() {
-        fieldsMap.values().stream()
+        fieldsMap.values()
             .forEach(HasValue::clear);
     }
 

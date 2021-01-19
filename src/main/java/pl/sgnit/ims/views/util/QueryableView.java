@@ -4,7 +4,7 @@ public interface QueryableView {
 
     void doUserQuery(String where);
 
-    long countRecords();
+    long countRecords(String where);
 
     String getFieldPrefix();
 }

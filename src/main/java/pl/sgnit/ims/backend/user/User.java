@@ -23,10 +23,10 @@ public class User extends EntityTemplate {
     @QueryableField
     private String username;
 
-    @Column(length = 511, nullable = false)
+    @Column(length = 511)
     private String password;
 
-    @Column(length = 32, nullable = false)
+    @Column(length = 32)
     private String salt;
 
     @ManyToMany(fetch = FetchType.EAGER)

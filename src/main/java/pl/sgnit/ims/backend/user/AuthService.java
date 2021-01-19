@@ -4,6 +4,7 @@ import com.vaadin.flow.router.RouteConfiguration;
 import com.vaadin.flow.server.VaadinSession;
 import org.springframework.stereotype.Service;
 import pl.sgnit.ims.views.about.AboutView;
+import pl.sgnit.ims.views.logout.LogoutView;
 import pl.sgnit.ims.views.main.MainView;
 import pl.sgnit.ims.views.role.RolesView;
 import pl.sgnit.ims.views.user.UsersView;
@@ -36,6 +37,7 @@ public class AuthService {
 
     private void createRoutes() {
         RouteConfiguration.forSessionScope().setRoute("about", AboutView.class, MainView.class);
+        RouteConfiguration.forSessionScope().setRoute("logout", LogoutView.class);
         RouteConfiguration.forSessionScope().setRoute("roles", RolesView.class, MainView.class);
         RouteConfiguration.forSessionScope().setRoute("users", UsersView.class, MainView.class);
     }

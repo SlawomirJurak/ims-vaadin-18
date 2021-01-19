@@ -57,6 +57,14 @@ public class UserService {
             .collect(Collectors.toList());
     }
 
+    public long count(String where) {
+        String sql = "select count(u.*) as record_count from users u where " + where;
+        Query userQuery = entityManager.createNativeQuery(sql);
+        List list = userQuery.getResultList();
+
+        return ((BigInteger)list.get(0)).longValue();
+    }
+
     private User createUser(Object[] properties) {
         User user = new User();
 

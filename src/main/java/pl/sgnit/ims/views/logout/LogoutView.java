@@ -7,7 +7,6 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.VaadinSession;
 
-@Route("logout")
 @PageTitle("Logout")
 public class LogoutView extends Composite<VerticalLayout> {
 

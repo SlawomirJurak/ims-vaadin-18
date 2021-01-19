@@ -26,6 +26,7 @@ public class UsersView extends VerticalLayout implements QueryableView {
     private UserForm userForm;
     private Button showQueryForm;
     private Button showAllRecords;
+    private Button newUser;
 
     public UsersView(UserService userService, RoleService roleService) {
         this.userService = userService;
@@ -40,8 +41,15 @@ public class UsersView extends VerticalLayout implements QueryableView {
             "All users",
             buttonClickEvent -> updateList()
         );
+        newUser = new Button(
+            "New user",
+            buttonClickEvent -> addNewUser()
+        );
         userForm = new UserForm(Set.copyOf(roleService.findAll("")));
         userForm.setVisible(false);
+        userForm.addListener(UserForm.SaveEvent.class, this::saveUser);
+        userForm.addListener(UserForm.DeleteEvent.class, this::deleteUser);
+        userForm.addListener(UserForm.CancelEvent.class, cancelEvent -> closeEditor());
 
         setSizeFull();
         configureGrid();
@@ -53,7 +61,7 @@ public class UsersView extends VerticalLayout implements QueryableView {
             userForm
         );
         add(
-            new HorizontalLayout(showAllRecords, showQueryForm),
+            new HorizontalLayout(showAllRecords, showQueryForm, newUser),
             dataLayout
         );
         updateList();
@@ -106,14 +114,18 @@ public class UsersView extends VerticalLayout implements QueryableView {
         closeEditor();
     }
 
+    private void addNewUser() {
+        editUser(new User(), true);
+    }
+
     @Override
     public void doUserQuery(String where) {
         userGrid.setItems(userService.doUserQuery(where));
     }
 
     @Override
-    public long countRecords() {
-        return 0;
+    public long countRecords(String where) {
+        return userService.count(where);
     }
 
     @Override
