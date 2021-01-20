@@ -31,6 +31,10 @@ public class UserService {
         return userRepository.findByUsername(username);
     }
 
+    public Optional<User> findByUsernameAndActive(String username, Boolean active) {
+        return userRepository.findByUsernameAndActive(username, active);
+    }
+
     public List<User> filterList(Map<String, String> conditions) {
         return Collections.emptyList();
     }
@@ -40,11 +44,19 @@ public class UserService {
     }
 
     public void save(User user) {
+        if (user.getId() == null) {
+            user.generateCode();
+            System.out.println("http://localhost:8080/activate?code=" + user.getCode());
+        }
         userRepository.save(user);
     }
 
     public void delete(User user) {
         userRepository.delete(user);
+    }
+
+    public Optional<User> findByCode(String code) {
+        return userRepository.findByCode(code);
     }
 
     public List<User> doUserQuery(String where) {
@@ -62,22 +74,22 @@ public class UserService {
         Query userQuery = entityManager.createNativeQuery(sql);
         List list = userQuery.getResultList();
 
-        return ((BigInteger)list.get(0)).longValue();
+        return ((BigInteger) list.get(0)).longValue();
     }
 
     private User createUser(Object[] properties) {
         User user = new User();
 
-        user.setId(((BigInteger)properties[0]).longValue());
-        user.setCreated(properties[1]==null ? null : ((Timestamp)properties[1]).toLocalDateTime());
-        user.setUpdated(properties[2]==null ? null : ((Timestamp)properties[2]).toLocalDateTime());
-        user.setVersion(properties[3]==null ? null : (Integer)properties[3]);
-        user.setPassword((String)properties[4]);
-        user.setSalt((String)properties[5]);
-        user.setUsername((String)properties[6]);
-        user.setEmail((String)properties[7]);
-        user.setFirstName((String)properties[8]);
-        user.setLastName((String)properties[9]);
+        user.setId(((BigInteger) properties[0]).longValue());
+        user.setCreated(properties[1] == null ? null : ((Timestamp) properties[1]).toLocalDateTime());
+        user.setUpdated(properties[2] == null ? null : ((Timestamp) properties[2]).toLocalDateTime());
+        user.setVersion(properties[3] == null ? null : (Integer) properties[3]);
+        user.setPassword((String) properties[4]);
+        user.setSalt((String) properties[5]);
+        user.setUsername((String) properties[6]);
+        user.setEmail((String) properties[7]);
+        user.setFirstName((String) properties[8]);
+        user.setLastName((String) properties[9]);
         return user;
     }
 
@@ -85,6 +97,7 @@ public class UserService {
 //    @EventListener(ApplicationReadyEvent.class)
 //    public void createAminUser() {
 //        User user = new User("admin", "admin1234");
+//        user.setActive(true);
 //
 //        userRepository.save(user);
 //    }

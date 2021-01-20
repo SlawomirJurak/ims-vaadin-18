@@ -21,7 +21,7 @@ public class AuthService {
     }
 
     public boolean authenticate(String username, String password) {
-        Optional<User> optionalUser = userService.findByUsername(username);
+        Optional<User> optionalUser = userService.findByUsernameAndActive(username, true);
 
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
@@ -33,6 +33,19 @@ public class AuthService {
             }
         }
         return false;
+    }
+
+    public void activate(String activationCode, String password) {
+        Optional<User> optionalUser = userService.findByCode(activationCode);
+
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+
+            user.hashPassword(password);
+            user.setActive(true);
+            user.setCode(null);
+            userService.save(user);
+        }
     }
 
     private void createRoutes() {

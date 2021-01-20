@@ -22,14 +22,15 @@ public class UserForm extends VerticalLayout {
     private final Set<Role> roles;
     private final Binder<User> binder = new BeanValidationBinder<>(User.class);
 
-    private TextField username = new TextField("User name");
-    private EmailField email = new EmailField("Email");
-    private TextField firstName = new TextField("First name");
-    private TextField lastName = new TextField("Last name");
+    private final TextField username = new TextField("User name");
+    private final EmailField email = new EmailField("Email");
+    private final TextField firstName = new TextField("First name");
+    private final TextField lastName = new TextField("Last name");
 
-    private Button save = new Button("Save");
-    private Button delete = new Button("Delete");
-    private Button cancel = new Button("Cancel");
+    private final Button save = new Button("Save");
+    private final Button delete = new Button("Delete");
+    private final Button cancel = new Button("Cancel");
+    private final Button changePassword = new Button("Generate change password link");
 
     public UserForm(Set<Role> roles) {
         this.roles = roles;
@@ -37,9 +38,17 @@ public class UserForm extends VerticalLayout {
         createLayout();
     }
 
-    public void setUser(User user, boolean newUser) {
+    public void setUser(User user) {
+        boolean newEntity;
+
+        if (user == null) {
+            newEntity = false;
+        } else {
+            newEntity = user.getId() == null;
+        }
         binder.setBean(user);
-        delete.setVisible(!newUser);
+        delete.setVisible(!newEntity);
+        changePassword.setVisible(!newEntity);
     }
 
     private void createLayout() {
@@ -64,7 +73,10 @@ public class UserForm extends VerticalLayout {
 
         binder.addStatusChangeListener(event -> save.setEnabled(binder.isValid()));
 
-        return new HorizontalLayout(save, delete, cancel);
+        return new VerticalLayout(
+            new HorizontalLayout(save, delete, cancel),
+            changePassword
+        );
     }
 
     private void validateAndSave() {
@@ -73,10 +85,10 @@ public class UserForm extends VerticalLayout {
         }
     }
 
-    public static abstract class ContactFormEvent extends ComponentEvent<UserForm> {
-        private User user;
+    public abstract static class UserFormEvent extends ComponentEvent<UserForm> {
+        private final User user;
 
-        protected ContactFormEvent(UserForm source, User user) {
+        protected UserFormEvent(UserForm source, User user) {
             super(source, false);
             this.user = user;
         }
@@ -86,20 +98,20 @@ public class UserForm extends VerticalLayout {
         }
     }
 
-    public static class SaveEvent extends UserForm.ContactFormEvent {
+    public static class SaveEvent extends UserFormEvent {
         SaveEvent(UserForm source, User user) {
             super(source, user);
         }
     }
 
-    public static class DeleteEvent extends UserForm.ContactFormEvent {
+    public static class DeleteEvent extends UserFormEvent {
         DeleteEvent(UserForm source, User user) {
             super(source, user);
         }
 
     }
 
-    public static class CancelEvent extends UserForm.ContactFormEvent {
+    public static class CancelEvent extends UserFormEvent {
         CancelEvent(UserForm source) {
             super(source, null);
         }

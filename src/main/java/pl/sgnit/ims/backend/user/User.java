@@ -12,6 +12,7 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import java.util.Set;
 
@@ -19,7 +20,7 @@ import java.util.Set;
 @Table(name = "users")
 public class User extends EntityTemplate {
 
-    @Column(name="username", length = 32, nullable = false)
+    @Column(name = "username", length = 32, nullable = false)
     @QueryableField
     private String username;
 
@@ -34,17 +35,23 @@ public class User extends EntityTemplate {
         inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> grantedRoles;
 
-    @Column(name="first_name")
+    @Column(name = "first_name")
     @QueryableField
     private String firstName;
 
-    @Column(name="last_name")
+    @Column(name = "last_name")
     @QueryableField
     private String lastName;
 
-    @Column(name="email")
+    @Column(name = "email")
     @QueryableField
     private String email;
+
+    @Column(name = "active")
+    @QueryableField
+    private Boolean active;
+
+    private String code;
 
     public User() {
     }
@@ -90,7 +97,7 @@ public class User extends EntityTemplate {
         return DigestUtils.sha512Hex(passwordToCheck + salt).equals(password);
     }
 
-    private void hashPassword(String plainPassword) {
+    public void hashPassword(String plainPassword) {
         salt = RandomStringUtils.random(32);
         password = DigestUtils.sha512Hex(plainPassword + salt);
     }
@@ -117,5 +124,32 @@ public class User extends EntityTemplate {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public Boolean getActive() {
+        return active;
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public void generateCode() {
+        code = RandomStringUtils.randomAlphanumeric(32);
+    }
+
+    @PrePersist
+    public void prePersist() {
+        if (active == null) {
+            active = false;
+        }
     }
 }

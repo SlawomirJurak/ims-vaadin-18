@@ -71,7 +71,7 @@ public class UsersView extends VerticalLayout implements QueryableView {
         userGrid.setSizeFull();
         userGrid.setColumns("username", "firstName", "lastName", "email");
         userGrid.getColumnByKey("username").setHeader("Login");
-        userGrid.asSingleSelect().addValueChangeListener(event -> editUser(event.getValue(), false));
+        userGrid.asSingleSelect().addValueChangeListener(event -> editUser(event.getValue()));
     }
 
     private void updateList() {
@@ -83,17 +83,17 @@ public class UsersView extends VerticalLayout implements QueryableView {
         queryForm.setVisible(true);
     }
 
-    private void editUser(User user, boolean newUser) {
+    private void editUser(User user) {
         if (user == null) {
             closeEditor();
             return;
         }
-        userForm.setUser(user, newUser);
+        userForm.setUser(user);
         showEditor();
     }
 
     private void closeEditor() {
-        userForm.setUser(null, false);
+        userForm.setUser(null);
         userForm.setVisible(false);
     }
 
@@ -115,7 +115,7 @@ public class UsersView extends VerticalLayout implements QueryableView {
     }
 
     private void addNewUser() {
-        editUser(new User(), true);
+        editUser(new User());
     }
 
     @Override
