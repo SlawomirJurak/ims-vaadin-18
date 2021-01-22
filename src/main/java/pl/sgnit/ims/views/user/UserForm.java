@@ -70,6 +70,7 @@ public class UserForm extends VerticalLayout {
         save.addClickListener(click -> validateAndSave());
         delete.addClickListener(click -> fireEvent(new UserForm.DeleteEvent(this, binder.getBean())));
         cancel.addClickListener(click -> fireEvent(new UserForm.CancelEvent(this)));
+        changePassword.addClickListener(click -> fireEvent(new UserForm.GenerateChangePasswordLinkEvent(this, binder.getBean())));
 
         binder.addStatusChangeListener(event -> save.setEnabled(binder.isValid()));
 
@@ -114,6 +115,12 @@ public class UserForm extends VerticalLayout {
     public static class CancelEvent extends UserFormEvent {
         CancelEvent(UserForm source) {
             super(source, null);
+        }
+    }
+
+    public static class GenerateChangePasswordLinkEvent extends UserFormEvent {
+        GenerateChangePasswordLinkEvent(UserForm source, User user) {
+            super(source, user);
         }
     }
 

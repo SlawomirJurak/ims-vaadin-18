@@ -25,7 +25,6 @@ public class ContentPanelService {
         this.contentPanelRepository = contentPanelRepository;
 
         contentPanelsClasses = Arrays.asList(
-            AboutView.class,
             RolesView.class,
             UsersView.class
         );

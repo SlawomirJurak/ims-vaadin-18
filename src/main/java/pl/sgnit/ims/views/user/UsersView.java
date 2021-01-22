@@ -50,6 +50,7 @@ public class UsersView extends VerticalLayout implements QueryableView {
         userForm.addListener(UserForm.SaveEvent.class, this::saveUser);
         userForm.addListener(UserForm.DeleteEvent.class, this::deleteUser);
         userForm.addListener(UserForm.CancelEvent.class, cancelEvent -> closeEditor());
+        userForm.addListener(UserForm.GenerateChangePasswordLinkEvent.class, this::generateChangePasswordLink);
 
         setSizeFull();
         configureGrid();
@@ -112,6 +113,10 @@ public class UsersView extends VerticalLayout implements QueryableView {
         userService.delete(event.getUser());
         updateList();
         closeEditor();
+    }
+
+    private void generateChangePasswordLink(UserForm.GenerateChangePasswordLinkEvent event) {
+        userService.generateChangePasswordLink(event.getUser());
     }
 
     private void addNewUser() {

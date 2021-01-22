@@ -51,6 +51,14 @@ public class UserService {
         userRepository.save(user);
     }
 
+    public void generateChangePasswordLink(User user) {
+        user.generateCode();
+        user.setActive(false);
+        userRepository.save(user);
+        System.out.println("http://localhost:8080/changePassword?code=" + user.getCode());
+
+    }
+
     public void delete(User user) {
         userRepository.delete(user);
     }

@@ -35,7 +35,7 @@ public class AuthService {
         return false;
     }
 
-    public void activate(String activationCode, String password) {
+    public void setPassword(String activationCode, String password) {
         Optional<User> optionalUser = userService.findByCode(activationCode);
 
         if (optionalUser.isPresent()) {
