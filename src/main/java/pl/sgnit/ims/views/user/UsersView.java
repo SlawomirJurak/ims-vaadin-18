@@ -1,6 +1,8 @@
 package pl.sgnit.ims.views.user;
 
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.checkbox.Checkbox;
+import com.vaadin.flow.component.grid.ColumnTextAlign;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -71,6 +73,17 @@ public class UsersView extends VerticalLayout implements QueryableView {
     private void configureGrid() {
         userGrid.setSizeFull();
         userGrid.setColumns("username", "firstName", "lastName", "email");
+        userGrid.addComponentColumn(item -> {
+            Checkbox checkbox = new Checkbox();
+            Boolean administrator = item.getAdministrator();
+
+            administrator = administrator != null && administrator;
+            checkbox.setValue(administrator);
+            checkbox.setReadOnly(true);
+            return checkbox;
+        }).setHeader("Administrator")
+            .setKey("administrator")
+            .setTextAlign(ColumnTextAlign.CENTER);
         userGrid.getColumnByKey("username").setHeader("Login");
         userGrid.asSingleSelect().addValueChangeListener(event -> editUser(event.getValue()));
     }

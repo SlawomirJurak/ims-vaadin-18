@@ -6,6 +6,7 @@ import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.EmailField;
@@ -26,6 +27,7 @@ public class UserForm extends VerticalLayout {
     private final EmailField email = new EmailField("Email");
     private final TextField firstName = new TextField("First name");
     private final TextField lastName = new TextField("Last name");
+    private final Checkbox administrator = new Checkbox("Administrator");
 
     private final Button save = new Button("Save");
     private final Button delete = new Button("Delete");
@@ -55,6 +57,7 @@ public class UserForm extends VerticalLayout {
         add(
             new HorizontalLayout(username, email),
             new HorizontalLayout(firstName, lastName),
+            administrator,
             createButtonsLayout()
         );
     }

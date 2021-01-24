@@ -155,7 +155,7 @@ public class User extends EntityTemplate {
     }
 
     public void setAdministrator(Boolean administrator) {
-        this.administrator = administrator;
+        this.administrator = administrator != null && administrator;
     }
 
     @PrePersist
