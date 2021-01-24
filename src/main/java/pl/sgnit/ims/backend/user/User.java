@@ -53,6 +53,10 @@ public class User extends EntityTemplate {
 
     private String code;
 
+    @Column(name = "administrator")
+    @QueryableField
+    private Boolean administrator;
+
     public User() {
     }
 
@@ -127,7 +131,7 @@ public class User extends EntityTemplate {
     }
 
     public Boolean getActive() {
-        return active;
+        return active == null ? Boolean.FALSE : active;
     }
 
     public void setActive(Boolean active) {
@@ -146,10 +150,21 @@ public class User extends EntityTemplate {
         code = RandomStringUtils.randomAlphanumeric(32);
     }
 
+    public Boolean getAdministrator() {
+        return administrator;
+    }
+
+    public void setAdministrator(Boolean administrator) {
+        this.administrator = administrator;
+    }
+
     @PrePersist
     public void prePersist() {
         if (active == null) {
             active = false;
+        }
+        if (administrator == null) {
+            administrator = false;
         }
     }
 }

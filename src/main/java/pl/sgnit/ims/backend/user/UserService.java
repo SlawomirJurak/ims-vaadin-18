@@ -101,11 +101,12 @@ public class UserService {
         return user;
     }
 
-// Uncomment this function before first run to create first user
+// Uncomment this function before first run to create administrator user
 //    @EventListener(ApplicationReadyEvent.class)
 //    public void createAminUser() {
 //        User user = new User("admin", "admin1234");
 //        user.setActive(true);
+//        user.setAdministrator(true);
 //
 //        userRepository.save(user);
 //    }

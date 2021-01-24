@@ -1,8 +1,11 @@
 package pl.sgnit.ims.backend.user;
 
+import com.vaadin.flow.component.Component;
 import com.vaadin.flow.router.RouteConfiguration;
+import com.vaadin.flow.router.RouterLayout;
 import com.vaadin.flow.server.VaadinSession;
 import org.springframework.stereotype.Service;
+import pl.sgnit.ims.backend.role.Role;
 import pl.sgnit.ims.views.about.AboutView;
 import pl.sgnit.ims.views.logout.LogoutView;
 import pl.sgnit.ims.views.main.MainView;
@@ -10,6 +13,7 @@ import pl.sgnit.ims.views.role.RolesView;
 import pl.sgnit.ims.views.user.UsersView;
 
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class AuthService {
@@ -51,7 +55,20 @@ public class AuthService {
     private void createRoutes() {
         RouteConfiguration.forSessionScope().setRoute("about", AboutView.class, MainView.class);
         RouteConfiguration.forSessionScope().setRoute("logout", LogoutView.class);
+
+        User user = VaadinSession.getCurrent().getAttribute(User.class);
+        if (user.getAdministrator()) {
+            createAllRoutes();
+        } else {
+            createGrantedRoutes(user.getGrantedRoles());
+        }
+    }
+
+    private void createAllRoutes() {
         RouteConfiguration.forSessionScope().setRoute("roles", RolesView.class, MainView.class);
         RouteConfiguration.forSessionScope().setRoute("users", UsersView.class, MainView.class);
+    }
+
+    private void createGrantedRoutes(Set<Role> grantedRoles) {
     }
 }
