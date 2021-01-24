@@ -1,5 +1,6 @@
 package pl.sgnit.ims.backend.user;
 
+import com.vaadin.flow.server.VaadinSession;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
@@ -59,7 +60,12 @@ public class UserService {
 
     }
 
-    public void delete(User user) {
+    public void delete(User user) throws UserException {
+        User loggedUser = VaadinSession.getCurrent().getAttribute(User.class);
+
+        if(loggedUser.getAdministrator() && loggedUser.equals(user)) {
+            throw new UserException("Administrator can't delete account that is yours");
+        }
         userRepository.delete(user);
     }
 

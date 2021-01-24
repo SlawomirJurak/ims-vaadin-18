@@ -4,11 +4,13 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.grid.ColumnTextAlign;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import pl.sgnit.ims.backend.role.RoleService;
 import pl.sgnit.ims.backend.user.User;
+import pl.sgnit.ims.backend.user.UserException;
 import pl.sgnit.ims.backend.user.UserService;
 import pl.sgnit.ims.views.util.QueryForm;
 import pl.sgnit.ims.views.util.QueryableView;
@@ -126,9 +128,13 @@ public class UsersView extends VerticalLayout implements QueryableView {
     }
 
     private void deleteUser(UserForm.DeleteEvent event) {
-        userService.delete(event.getUser());
-        updateList();
-        closeEditor();
+        try {
+            userService.delete(event.getUser());
+            updateList();
+            closeEditor();
+        } catch (UserException ex) {
+            Notification.show(ex.getMessage());
+        }
     }
 
     private void generateChangePasswordLink(UserForm.GenerateChangePasswordLinkEvent event) {

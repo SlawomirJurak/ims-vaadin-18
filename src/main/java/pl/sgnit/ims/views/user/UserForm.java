@@ -13,6 +13,7 @@ import com.vaadin.flow.component.textfield.EmailField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.Binder;
+import com.vaadin.flow.server.VaadinSession;
 import com.vaadin.flow.shared.Registration;
 import pl.sgnit.ims.backend.role.Role;
 import pl.sgnit.ims.backend.user.User;
@@ -42,6 +43,7 @@ public class UserForm extends VerticalLayout {
 
     public void setUser(User user) {
         boolean newEntity;
+        User loggedUser = VaadinSession.getCurrent().getAttribute(User.class);
 
         if (user == null) {
             newEntity = false;
@@ -51,9 +53,21 @@ public class UserForm extends VerticalLayout {
         binder.setBean(user);
         delete.setVisible(!newEntity);
         changePassword.setVisible(!newEntity);
+        if (!newEntity) {
+            if (Boolean.TRUE.equals(loggedUser.getAdministrator())) {
+                delete.setEnabled(user!=null && !user.equals(loggedUser));
+                administrator.setEnabled(delete.isEnabled());
+            } else {
+                delete.setEnabled(user!=null && !user.getAdministrator());
+                administrator.setEnabled(false);
+            }
+        }
     }
 
     private void createLayout() {
+        User loggedUser = VaadinSession.getCurrent().getAttribute(User.class);
+
+        administrator.setVisible(loggedUser.getAdministrator());
         add(
             new HorizontalLayout(username, email),
             new HorizontalLayout(firstName, lastName),
