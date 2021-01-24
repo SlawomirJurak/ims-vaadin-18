@@ -73,19 +73,22 @@ public class UsersView extends VerticalLayout implements QueryableView {
     private void configureGrid() {
         userGrid.setSizeFull();
         userGrid.setColumns("username", "firstName", "lastName", "email");
-        userGrid.addComponentColumn(item -> {
-            Checkbox checkbox = new Checkbox();
-            Boolean administrator = item.getAdministrator();
-
-            administrator = administrator != null && administrator;
-            checkbox.setValue(administrator);
-            checkbox.setReadOnly(true);
-            return checkbox;
-        }).setHeader("Administrator")
+        userGrid.addComponentColumn(this::getCheckbox)
+            .setHeader("Administrator")
             .setKey("administrator")
             .setTextAlign(ColumnTextAlign.CENTER);
         userGrid.getColumnByKey("username").setHeader("Login");
         userGrid.asSingleSelect().addValueChangeListener(event -> editUser(event.getValue()));
+    }
+
+    private Checkbox getCheckbox(User user) {
+        Checkbox checkbox = new Checkbox();
+        Boolean administrator = user.getAdministrator();
+
+        administrator = administrator != null && administrator;
+        checkbox.setValue(administrator);
+        checkbox.setReadOnly(true);
+        return checkbox;
     }
 
     private void updateList() {
