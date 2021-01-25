@@ -58,22 +58,33 @@ public class UserForm extends VerticalLayout {
                 delete.setEnabled(user!=null && !user.equals(loggedUser));
                 administrator.setEnabled(delete.isEnabled());
             } else {
-                delete.setEnabled(user!=null && !user.getAdministrator());
+                boolean canEdit = user!=null && !user.getAdministrator();
+
+                firstName.setEnabled(canEdit);
+                lastName.setEnabled(canEdit);
+                email.setEnabled(canEdit);
+                username.setEnabled(canEdit);
+                save.setEnabled(canEdit);
+                delete.setEnabled(canEdit);
                 administrator.setEnabled(false);
             }
         }
     }
 
     private void createLayout() {
-        User loggedUser = VaadinSession.getCurrent().getAttribute(User.class);
-
-        administrator.setVisible(loggedUser.getAdministrator());
+        configureControls();
         add(
             new HorizontalLayout(username, email),
             new HorizontalLayout(firstName, lastName),
             administrator,
             createButtonsLayout()
         );
+    }
+
+    private void configureControls() {
+        User loggedUser = VaadinSession.getCurrent().getAttribute(User.class);
+
+        administrator.setVisible(loggedUser.getAdministrator());
     }
 
     private Component createButtonsLayout() {
