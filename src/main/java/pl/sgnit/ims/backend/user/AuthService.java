@@ -1,8 +1,6 @@
 package pl.sgnit.ims.backend.user;
 
-import com.vaadin.flow.component.Component;
 import com.vaadin.flow.router.RouteConfiguration;
-import com.vaadin.flow.router.RouterLayout;
 import com.vaadin.flow.server.VaadinSession;
 import org.springframework.stereotype.Service;
 import pl.sgnit.ims.backend.role.Role;

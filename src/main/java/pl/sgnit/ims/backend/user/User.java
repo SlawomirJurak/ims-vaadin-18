@@ -43,7 +43,7 @@ public class User extends EntityTemplate {
     @QueryableField
     private String lastName;
 
-    @Column(name = "email")
+    @Column(name = "email", unique = true)
     @QueryableField
     private String email;
 
@@ -127,7 +127,7 @@ public class User extends EntityTemplate {
     }
 
     public void setEmail(String email) {
-        this.email = email;
+        this.email = email.toLowerCase();
     }
 
     public Boolean getActive() {

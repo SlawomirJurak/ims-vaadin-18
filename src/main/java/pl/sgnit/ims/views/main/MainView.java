@@ -8,6 +8,7 @@ import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.dependency.JsModule;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.Image;
+import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -87,23 +88,45 @@ public class MainView extends AppLayout {
 
     private Component[] createMenuItems() {
         return new Tab[]{
-            createTab("About", AboutView.class),
-            createTab("Roles", RolesView.class),
-            createTab("Users", UsersView.class)};
+            createLinkTab("About", AboutView.class),
+            createLinkTab("Roles", RolesView.class),
+            createLinkTab("Users", UsersView.class)};
     }
 
-    private static Tab createTab(String text, Class<? extends Component> navigationTarget) {
-        final Tab tab = new Tab();
+    private Tab createLinkTab(String text, Class<? extends Component> navigationTarget) {
+        Tab tab = new Tab();
+
         tab.add(new RouterLink(text, navigationTarget));
         ComponentUtil.setData(tab, Class.class, navigationTarget);
+        return tab;
+    }
+
+    private Tab createSectionTab(String text, int indexChildTab) {
+        Tab tab = new Tab();
+        Paragraph tabText = new Paragraph(text);
+
+        tabText.getStyle().set("color", "gray");
+        tabText.getStyle().set("font-weight", "bold");
+        tabText.addClickListener(paragraphClickEvent -> {
+            if (paragraphClickEvent.getClickCount()==2) {
+                menu.getComponentAt(indexChildTab).setVisible(!menu.getComponentAt(indexChildTab).isVisible());
+            }
+        });
+        tab.add(tabText);
+        ComponentUtil.setData(tab, Class.class, String.class);
         return tab;
     }
 
     @Override
     protected void afterNavigation() {
         super.afterNavigation();
-        getTabForComponent(getContent()).ifPresent(menu::setSelectedTab);
-        viewTitle.setText(getCurrentPageTitle());
+
+        Optional<Tab> tab =  getTabForComponent(getContent());
+
+        if (tab.isPresent()) {
+            menu.setSelectedTab(tab.get());
+            viewTitle.setText(getCurrentPageTitle());
+        }
     }
 
     private Optional<Tab> getTabForComponent(Component component) {

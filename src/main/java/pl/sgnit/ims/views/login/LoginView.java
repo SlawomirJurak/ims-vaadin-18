@@ -29,7 +29,7 @@ public class LoginView extends Div {
         user = new TextField("Username");
         password = new PasswordField("Password");
         add(
-            new H1("Welcome"),
+            new H1("Welcome IMS Vaadin 18"),
             user,
             password,
             new Button("Login", event -> authenticateUser())
@@ -41,6 +41,6 @@ public class LoginView extends Div {
             UI.getCurrent().navigate("about");
             return;
         }
-        Notification.show("Wrong credentials");
+        Notification.show("Wrong credentials", 1500, Notification.Position.TOP_CENTER);
     }
 }

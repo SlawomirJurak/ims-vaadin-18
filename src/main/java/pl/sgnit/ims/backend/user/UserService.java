@@ -44,12 +44,17 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public void save(User user) {
+    public String save(User user) {
         if (user.getId() == null) {
+            Optional<User> optionalUser = userRepository.findByEmail(user.getEmail().toLowerCase());
+            if (optionalUser.isPresent()) {
+                return "The email "+user.getEmail()+" is already used";
+            }
             user.generateCode();
             System.out.println("http://localhost:8080/activate?code=" + user.getCode());
         }
         userRepository.save(user);
+        return "";
     }
 
     public void generateChangePasswordLink(User user) {

@@ -122,9 +122,14 @@ public class UsersView extends VerticalLayout implements QueryableView {
     }
 
     private void saveUser(UserForm.SaveEvent event) {
-        userService.save(event.getUser());
-        updateList();
-        closeEditor();
+        String message = userService.save(event.getUser());
+
+        if (message.isEmpty()) {
+            updateList();
+            closeEditor();
+            return;
+        }
+        Notification.show(message, 2000, Notification.Position.TOP_CENTER);
     }
 
     private void deleteUser(UserForm.DeleteEvent event) {
