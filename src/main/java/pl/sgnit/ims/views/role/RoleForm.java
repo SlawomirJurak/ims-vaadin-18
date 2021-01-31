@@ -6,6 +6,7 @@ import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.listbox.MultiSelectListBox;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -60,8 +61,6 @@ public class RoleForm extends VerticalLayout {
             name,
             description
         );
-        contentPanels.setWidthFull();
-        contentPanels.setItems(contentPanelList);
         layout.add(
             row,
             createContentPanelsControl(),
@@ -72,9 +71,20 @@ public class RoleForm extends VerticalLayout {
 
     private Component createContentPanelsControl() {
         VerticalLayout control = new VerticalLayout();
-        HorizontalLayout row = new HorizontalLayout();
-        VerticalLayout buttons = new VerticalLayout();
+        HorizontalLayout buttons = new HorizontalLayout();
 
+        contentPanels.setWidthFull();
+        contentPanels.setItems(contentPanelList);
+        contentPanels.setRenderer(new ComponentRenderer<>(item -> {
+            Div name = new Div();
+            name.getStyle().set("font-weight", "bold");
+            name.setText(item.getName());
+
+            Div description = new Div();
+            description.getStyle().set("font-size", "12px");
+            description.setText(item.getDescription());
+            return new Div(name, description);
+        }));
         selectAll.addClickListener(buttonClickEvent -> {
             contentPanels.setValue(contentPanelList);
         });
@@ -83,18 +93,12 @@ public class RoleForm extends VerticalLayout {
             selectAll,
             selectNone
         );
-        contentPanels.setRenderer(new ComponentRenderer<>(item -> {
-            Label label = new Label(item.getName());
-            return label;
-        }));
-        row.add(
+        control.add(
+            new Label("Panels"),
             contentPanels,
             buttons
         );
-        control.add(
-            new Label("Panels"),
-            row
-        );
+        control.getStyle().set("border-bottom", "2px solid #0080ff");
         return control;
     }
 
