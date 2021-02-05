@@ -1,4 +1,4 @@
-package pl.sgnit.ims.views.user;
+package pl.sgnit.ims.views.administration.user;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentEvent;
@@ -15,8 +15,8 @@ import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.server.VaadinSession;
 import com.vaadin.flow.shared.Registration;
-import pl.sgnit.ims.backend.role.Role;
-import pl.sgnit.ims.backend.user.User;
+import pl.sgnit.ims.backend.administration.role.Role;
+import pl.sgnit.ims.backend.administration.user.User;
 
 import java.util.Set;
 

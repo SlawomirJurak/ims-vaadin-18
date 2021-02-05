@@ -1,4 +1,4 @@
-package pl.sgnit.ims.backend.user;
+package pl.sgnit.ims.backend.administration.user;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

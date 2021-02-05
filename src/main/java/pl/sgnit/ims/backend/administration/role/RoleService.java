@@ -1,4 +1,4 @@
-package pl.sgnit.ims.backend.role;
+package pl.sgnit.ims.backend.administration.role;
 
 import org.springframework.stereotype.Service;
 

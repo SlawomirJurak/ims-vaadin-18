@@ -6,39 +6,39 @@ import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.dependency.JsModule;
+import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.Image;
-import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.component.tabs.TabsVariant;
+import com.vaadin.flow.component.treegrid.TreeGrid;
+import com.vaadin.flow.data.provider.hierarchy.TreeData;
+import com.vaadin.flow.data.provider.hierarchy.TreeDataProvider;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.RouterLink;
 import pl.sgnit.ims.views.about.AboutView;
+import pl.sgnit.ims.views.administration.role.RolesView;
+import pl.sgnit.ims.views.administration.user.UsersView;
 import pl.sgnit.ims.views.logout.LogoutView;
-import pl.sgnit.ims.views.role.RolesView;
-import pl.sgnit.ims.views.user.UsersView;
-
-import java.util.Optional;
 
 /**
  * The main contentpanel is a top-level placeholder for other views.
  */
 @CssImport("./styles/views/main/main-view.css")
+@CssImport(value = "./styles/views/main/app-layout.css", themeFor = "vaadin-app-layout")
 @JsModule("./styles/shared-styles.js")
 public class MainView extends AppLayout {
 
-    private final Tabs menu;
     private H1 viewTitle;
 
     public MainView() {
         setPrimarySection(Section.DRAWER);
         addToNavbar(true, createHeaderContent());
-        menu = createMenu();
-        addToDrawer(createDrawerContent(menu));
+        addToDrawer(createDrawerContent(createTreeMenu()));
     }
 
     private Component createHeaderContent() {
@@ -61,20 +61,26 @@ public class MainView extends AppLayout {
         return layout;
     }
 
-    private Component createDrawerContent(Tabs menu) {
+    private Component createDrawerContent(Component menu) {
         VerticalLayout layout = new VerticalLayout();
+
         layout.setSizeFull();
         layout.setPadding(false);
         layout.setSpacing(false);
         layout.getThemeList().set("spacing-s", true);
         layout.setAlignItems(FlexComponent.Alignment.STRETCH);
+        layout.add(createLogo(), menu);
+        return layout;
+    }
+
+    private Component createLogo() {
         HorizontalLayout logoLayout = new HorizontalLayout();
+
         logoLayout.setId("logo");
         logoLayout.setAlignItems(FlexComponent.Alignment.CENTER);
         logoLayout.add(new Image("images/logo.png", "IMS Vaadin 18 logo"));
         logoLayout.add(new H1("IMS Vaadin 18"));
-        layout.add(logoLayout, menu);
-        return layout;
+        return logoLayout;
     }
 
     private Tabs createMenu() {
@@ -101,37 +107,45 @@ public class MainView extends AppLayout {
         return tab;
     }
 
-    private Tab createSectionTab(String text, int indexChildTab) {
-        Tab tab = new Tab();
-        Paragraph tabText = new Paragraph(text);
+    private Component createSectionTab(String text) {
+        Div tabText = new Div();
 
+        tabText.setText(text);
         tabText.getStyle().set("color", "gray");
         tabText.getStyle().set("font-weight", "bold");
-        tabText.addClickListener(paragraphClickEvent -> {
-            if (paragraphClickEvent.getClickCount()==2) {
-                menu.getComponentAt(indexChildTab).setVisible(!menu.getComponentAt(indexChildTab).isVisible());
+        ComponentUtil.setData(tabText, Class.class, String.class);
+        return tabText;
+    }
+
+    private Component createTreeMenu() {
+        TreeData<MenuItem> menuItemTreeData = new TreeData<>();
+        TreeData<MenuItem> item;
+        MenuItem rootMenuItem;
+
+        rootMenuItem = new MenuItem("About", AboutView.class);
+        menuItemTreeData.addRootItems(rootMenuItem);
+        rootMenuItem = new MenuItem("Administration", null);
+        item = menuItemTreeData.addRootItems(rootMenuItem);
+        item.addItem(rootMenuItem, new MenuItem("Roles", RolesView.class));
+        item.addItem(rootMenuItem, new MenuItem("Users", UsersView.class));
+
+        TreeDataProvider<MenuItem> treeDataProvider = new TreeDataProvider<>(menuItemTreeData);
+        TreeGrid<MenuItem> menuTree = new TreeGrid<>();
+        menuTree.setDataProvider(treeDataProvider);
+        menuTree.addComponentHierarchyColumn(treeItem -> {
+            if (treeItem.getNavigationTarget() == null) {
+                return createSectionTab(treeItem.getTitle());
             }
+            return createLinkTab(treeItem.getTitle(), treeItem.getNavigationTarget());
         });
-        tab.add(tabText);
-        ComponentUtil.setData(tab, Class.class, String.class);
-        return tab;
+        return menuTree;
     }
 
     @Override
     protected void afterNavigation() {
         super.afterNavigation();
 
-        Optional<Tab> tab =  getTabForComponent(getContent());
-
-        if (tab.isPresent()) {
-            menu.setSelectedTab(tab.get());
-            viewTitle.setText(getCurrentPageTitle());
-        }
-    }
-
-    private Optional<Tab> getTabForComponent(Component component) {
-        return menu.getChildren().filter(tab -> ComponentUtil.getData(tab, Class.class).equals(component.getClass()))
-            .findFirst().map(Tab.class::cast);
+        viewTitle.setText(getCurrentPageTitle());
     }
 
     private String getCurrentPageTitle() {

@@ -1,9 +1,8 @@
-package pl.sgnit.ims.backend.role;
+package pl.sgnit.ims.backend.administration.role;
 
 import pl.sgnit.ims.backend.EntityTemplate;
-import pl.sgnit.ims.backend.contentpanel.ContentPanel;
+import pl.sgnit.ims.backend.administration.contentpanel.ContentPanel;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;

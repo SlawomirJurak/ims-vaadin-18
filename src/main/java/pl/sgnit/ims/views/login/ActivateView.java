@@ -1,7 +1,7 @@
 package pl.sgnit.ims.views.login;
 
 import com.vaadin.flow.router.Route;
-import pl.sgnit.ims.backend.user.AuthService;
+import pl.sgnit.ims.backend.administration.user.AuthService;
 
 @Route(value = "activate")
 public class ActivateView extends DefinePasswordView {

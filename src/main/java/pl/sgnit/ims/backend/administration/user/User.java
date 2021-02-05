@@ -1,9 +1,9 @@
-package pl.sgnit.ims.backend.user;
+package pl.sgnit.ims.backend.administration.user;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import pl.sgnit.ims.backend.EntityTemplate;
-import pl.sgnit.ims.backend.role.Role;
+import pl.sgnit.ims.backend.administration.role.Role;
 import pl.sgnit.ims.backend.utils.QueryableField;
 
 import javax.persistence.Column;

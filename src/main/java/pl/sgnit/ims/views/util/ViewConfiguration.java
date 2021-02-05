@@ -7,7 +7,13 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE})
-public @interface ViewPath {
+public @interface ViewConfiguration {
 
-    String value() default "";
+    String id();
+
+    String title();
+
+    String[] path();
+
+    String description();
 }

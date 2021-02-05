@@ -9,7 +9,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
-import pl.sgnit.ims.backend.user.AuthService;
+import pl.sgnit.ims.backend.administration.user.AuthService;
 
 import java.util.List;
 import java.util.Map;

@@ -1,4 +1,4 @@
-package pl.sgnit.ims.views.role;
+package pl.sgnit.ims.views.administration.role;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentEvent;
@@ -16,8 +16,8 @@ import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.shared.Registration;
-import pl.sgnit.ims.backend.contentpanel.ContentPanel;
-import pl.sgnit.ims.backend.role.Role;
+import pl.sgnit.ims.backend.administration.contentpanel.ContentPanel;
+import pl.sgnit.ims.backend.administration.role.Role;
 
 import java.util.Set;
 
@@ -78,7 +78,7 @@ public class RoleForm extends VerticalLayout {
         contentPanels.setRenderer(new ComponentRenderer<>(item -> {
             Div name = new Div();
             name.getStyle().set("font-weight", "bold");
-            name.setText(item.getName());
+            name.setText(item.getTitle());
 
             Div description = new Div();
             description.getStyle().set("font-size", "12px");

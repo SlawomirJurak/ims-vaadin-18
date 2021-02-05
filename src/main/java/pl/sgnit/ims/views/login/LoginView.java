@@ -10,7 +10,7 @@ import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import pl.sgnit.ims.backend.user.AuthService;
+import pl.sgnit.ims.backend.administration.user.AuthService;
 
 @Route(value = "login")
 @PageTitle("Login")

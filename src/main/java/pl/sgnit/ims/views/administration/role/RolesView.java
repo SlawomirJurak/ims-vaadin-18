@@ -1,4 +1,4 @@
-package pl.sgnit.ims.views.role;
+package pl.sgnit.ims.views.administration.role;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
@@ -9,13 +9,13 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.PageTitle;
-import pl.sgnit.ims.backend.contentpanel.ContentPanelService;
-import pl.sgnit.ims.backend.role.Role;
-import pl.sgnit.ims.backend.role.RoleService;
-import pl.sgnit.ims.views.util.ViewPath;
+import pl.sgnit.ims.backend.administration.contentpanel.ContentPanelService;
+import pl.sgnit.ims.backend.administration.role.Role;
+import pl.sgnit.ims.backend.administration.role.RoleService;
+import pl.sgnit.ims.views.util.ViewConfiguration;
 
 @PageTitle("Roles")
-@ViewPath("roles")
+@ViewConfiguration(id = "roles", title = "Administration - Roles", path = {"Administration"}, description = "Management of roles")
 public class RolesView extends VerticalLayout {
 
     private final RoleService roleService;

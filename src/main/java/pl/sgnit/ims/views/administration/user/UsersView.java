@@ -1,4 +1,4 @@
-package pl.sgnit.ims.views.user;
+package pl.sgnit.ims.views.administration.user;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.checkbox.Checkbox;
@@ -8,18 +8,18 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
-import pl.sgnit.ims.backend.role.RoleService;
-import pl.sgnit.ims.backend.user.User;
-import pl.sgnit.ims.backend.user.UserException;
-import pl.sgnit.ims.backend.user.UserService;
+import pl.sgnit.ims.backend.administration.role.RoleService;
+import pl.sgnit.ims.backend.administration.user.User;
+import pl.sgnit.ims.backend.administration.user.UserException;
+import pl.sgnit.ims.backend.administration.user.UserService;
 import pl.sgnit.ims.views.util.QueryForm;
 import pl.sgnit.ims.views.util.QueryableView;
-import pl.sgnit.ims.views.util.ViewPath;
+import pl.sgnit.ims.views.util.ViewConfiguration;
 
 import java.util.Set;
 
 @PageTitle("Users")
-@ViewPath("users")
+@ViewConfiguration(id = "users", title = "Administration - Users", path = {"Administration"}, description = "Management of users")
 public class UsersView extends VerticalLayout implements QueryableView {
 
     private final UserService userService;
