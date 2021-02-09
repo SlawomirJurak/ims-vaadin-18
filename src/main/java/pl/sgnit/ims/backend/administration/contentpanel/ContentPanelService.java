@@ -9,6 +9,7 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 import pl.sgnit.ims.views.administration.role.RolesView;
 import pl.sgnit.ims.views.administration.user.UsersView;
+import pl.sgnit.ims.views.calendar.weekscedule.WeekScheduleView;
 import pl.sgnit.ims.views.util.ViewConfiguration;
 
 import java.util.Arrays;
@@ -33,7 +34,8 @@ public class ContentPanelService {
 
         contentPanelsClasses = Arrays.asList(
             RolesView.class,
-            UsersView.class
+            UsersView.class,
+            WeekScheduleView.class
         );
 
     }

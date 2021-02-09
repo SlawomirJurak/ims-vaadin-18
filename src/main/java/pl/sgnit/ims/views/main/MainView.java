@@ -23,6 +23,7 @@ import com.vaadin.flow.router.RouterLink;
 import pl.sgnit.ims.views.about.AboutView;
 import pl.sgnit.ims.views.administration.role.RolesView;
 import pl.sgnit.ims.views.administration.user.UsersView;
+import pl.sgnit.ims.views.calendar.weekscedule.WeekScheduleView;
 import pl.sgnit.ims.views.logout.LogoutView;
 
 /**
@@ -128,6 +129,9 @@ public class MainView extends AppLayout {
         item = menuItemTreeData.addRootItems(rootMenuItem);
         item.addItem(rootMenuItem, new MenuItem("Roles", RolesView.class));
         item.addItem(rootMenuItem, new MenuItem("Users", UsersView.class));
+        rootMenuItem = new MenuItem("Calendar", null);
+        item = menuItemTreeData.addRootItems(rootMenuItem);
+        item.addItem(rootMenuItem, new MenuItem("Week schedule", WeekScheduleView.class));
 
         TreeDataProvider<MenuItem> treeDataProvider = new TreeDataProvider<>(menuItemTreeData);
         TreeGrid<MenuItem> menuTree = new TreeGrid<>();

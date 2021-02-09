@@ -5,6 +5,7 @@ import com.vaadin.flow.server.VaadinSession;
 import org.springframework.stereotype.Service;
 import pl.sgnit.ims.backend.administration.role.Role;
 import pl.sgnit.ims.views.about.AboutView;
+import pl.sgnit.ims.views.calendar.weekscedule.WeekScheduleView;
 import pl.sgnit.ims.views.logout.LogoutView;
 import pl.sgnit.ims.views.main.MainView;
 import pl.sgnit.ims.views.administration.role.RolesView;
@@ -65,6 +66,7 @@ public class AuthService {
     private void createAllRoutes() {
         RouteConfiguration.forSessionScope().setRoute("roles", RolesView.class, MainView.class);
         RouteConfiguration.forSessionScope().setRoute("users", UsersView.class, MainView.class);
+        RouteConfiguration.forSessionScope().setRoute("weekSchedule", WeekScheduleView.class, MainView.class);
     }
 
     private void createGrantedRoutes(Set<Role> grantedRoles) {
