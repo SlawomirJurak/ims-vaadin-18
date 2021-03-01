@@ -3,17 +3,18 @@ package pl.sgnit.ims.views.calendar.weekscedule;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Span;
-import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
 import pl.sgnit.ims.backend.calendar.weekschedule.WeekSchedule;
 import pl.sgnit.ims.backend.calendar.weekschedule.WeekScheduleService;
+import pl.sgnit.ims.backend.calendar.weekscheduleday.WeekScheduleDayService;
+import pl.sgnit.ims.views.calendar.weekscheduleday.WeekScheduleDayView;
+import pl.sgnit.ims.views.util.ActionMessageBoxDelete;
 import pl.sgnit.ims.views.util.ViewConfiguration;
 
 @PageTitle("Week Schedule")
@@ -25,6 +26,7 @@ import pl.sgnit.ims.views.util.ViewConfiguration;
 public class WeekScheduleView extends VerticalLayout {
 
     private final WeekScheduleService weekScheduleService;
+    private final WeekScheduleDayService weekScheduleDayService;
 
     private ComboBox<WeekSchedule> weekScheduleComboBox;
     private TextField weekScheduleEdit;
@@ -33,13 +35,15 @@ public class WeekScheduleView extends VerticalLayout {
     private Button deleteWeekScheduleButton;
     private Button saveButton;
     private Button cancelButton;
+    private WeekScheduleDayView weekScheduleDayView;
+
+    private boolean edited;
 
     private Component newEdit;
 
-    private WeekSchedule weekSchedule;
-
-    public WeekScheduleView(WeekScheduleService weekScheduleService) {
+    public WeekScheduleView(WeekScheduleService weekScheduleService, WeekScheduleDayService weekScheduleDayService) {
         this.weekScheduleService = weekScheduleService;
+        this.weekScheduleDayService = weekScheduleDayService;
         createLayout();
     }
 
@@ -83,6 +87,8 @@ public class WeekScheduleView extends VerticalLayout {
         );
         row.setVisible(false);
         add(row);
+        weekScheduleDayView = new WeekScheduleDayView(weekScheduleDayService);
+        add(weekScheduleDayView);
 
         newWeekScheduleButton.addClickListener(buttonClickEvent -> newWeekSchedule());
         editWeekScheduleButton.addClickListener(buttonClickEvent -> editWeekSchedule());
@@ -94,15 +100,26 @@ public class WeekScheduleView extends VerticalLayout {
     }
 
     private void saveWeekSchedule() {
+        WeekSchedule weekSchedule;
+
         showEditRow(false);
+
+        if (edited) {
+            weekSchedule = weekScheduleComboBox.getValue();
+        } else {
+            weekSchedule = new WeekSchedule();
+        }
         weekSchedule.setDescription(weekScheduleEdit.getValue());
         weekSchedule = weekScheduleService.save(weekSchedule);
         refreshWeekScheduleList();
         weekScheduleComboBox.setValue(weekSchedule);
+        weekScheduleDayView.setDayTypeControlsReadOnly(false);
     }
 
     private void cancelEdit() {
         showEditRow(false);
+        weekScheduleDayView.updateData(weekScheduleComboBox.getValue().getId());
+        weekScheduleDayView.setDayTypeControlsReadOnly(false);
     }
 
     private void showEditRow(boolean visible) {
@@ -115,20 +132,26 @@ public class WeekScheduleView extends VerticalLayout {
             return;
         }
         weekScheduleEdit.setLabel("Edit week schedule");
-        weekSchedule = weekScheduleComboBox.getValue();
+        WeekSchedule weekSchedule = weekScheduleComboBox.getValue();
         weekScheduleEdit.setValue(weekSchedule.getDescription());
         showEditRow(true);
+        weekScheduleDayView.setDayTypeControlsReadOnly(true);
+        edited = true;
     }
 
     private void newWeekSchedule() {
+        weekScheduleDayView.clearAndDisable();
         weekScheduleEdit.setLabel("New week schedule");
         weekScheduleEdit.setValue("");
-        weekSchedule = new WeekSchedule();
+        WeekSchedule weekSchedule = new WeekSchedule();
         showEditRow(true);
+        edited = false;
     }
 
     private void deleteWeekSchedule() {
-        Notification notification = new Notification();
+        if (weekScheduleComboBox.getValue() == null) {
+            return;
+        }
 
         Div text = new Div();
         Span scheduleName = new Span(weekScheduleComboBox.getValue().getDescription());
@@ -139,44 +162,33 @@ public class WeekScheduleView extends VerticalLayout {
             new Text(" schedule?")
         );
 
-        Button delete = new Button("Delete");
-        delete.getStyle().set("margin-left", "auto");
-        delete.addThemeVariants(ButtonVariant.LUMO_ERROR);
-        delete.addClickListener(buttonClickEvent -> {
-            doDeleteWeekSchedule();
-            notification.close();
-        });
+        ActionMessageBoxDelete messageBoxDelete = new ActionMessageBoxDelete(
+            text,
+            () -> doDeleteWeekSchedule(),
+            null);
 
-        Button cancel = new Button("Cancel");
-        cancel.addClickListener(buttonClickEvent -> notification.close());
-
-        HorizontalLayout buttons = new HorizontalLayout(delete, cancel);
-        buttons.setWidthFull();
-        buttons.setAlignItems(Alignment.END);
-        VerticalLayout content = new VerticalLayout(text, buttons);
-
-        notification.add(content);
-        notification.setPosition(Notification.Position.TOP_CENTER);
-        notification.open();
+        messageBoxDelete.open();
     }
 
     private void setEnableWeekScheduleRow(boolean enabled) {
         newWeekScheduleButton.setEnabled(enabled);
         editWeekScheduleButton.setEnabled(enabled);
+        deleteWeekScheduleButton.setEnabled(enabled);
         weekScheduleComboBox.setEnabled(enabled);
     }
 
     private void refreshWeekScheduleList() {
-        ComboBox.ItemFilter<WeekSchedule> filter =
-            (weekScheduleItem, filterString) -> weekScheduleItem.getDescription().contains(filterString);
-
-        weekScheduleComboBox.setItems(filter, weekScheduleService.findAll());
-        weekScheduleValueChanged();
+        weekScheduleComboBox.setItems(weekScheduleService.findAll());
     }
 
     private void weekScheduleValueChanged() {
-        editWeekScheduleButton.setEnabled(weekScheduleComboBox.getValue() != null);
-        deleteWeekScheduleButton.setEnabled(weekScheduleComboBox.getValue() != null);
+        WeekSchedule weekSchedule = weekScheduleComboBox.getValue();
+
+        editWeekScheduleButton.setEnabled(weekSchedule != null);
+        deleteWeekScheduleButton.setEnabled(weekSchedule != null);
+        weekScheduleDayView.updateData(
+            weekSchedule == null ? null : weekSchedule.getId()
+        );
     }
 
     private void doDeleteWeekSchedule() {

@@ -26,9 +26,6 @@ import pl.sgnit.ims.views.administration.user.UsersView;
 import pl.sgnit.ims.views.calendar.weekscedule.WeekScheduleView;
 import pl.sgnit.ims.views.logout.LogoutView;
 
-/**
- * The main contentpanel is a top-level placeholder for other views.
- */
 @CssImport("./styles/views/main/main-view.css")
 @CssImport(value = "./styles/views/main/app-layout.css", themeFor = "vaadin-app-layout")
 @JsModule("./styles/shared-styles.js")

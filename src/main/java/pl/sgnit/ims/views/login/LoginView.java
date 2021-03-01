@@ -27,6 +27,7 @@ public class LoginView extends Div {
 
         setId("login-view");
         user = new TextField("Username");
+        user.setAutofocus(true);
         password = new PasswordField("Password");
         add(
             new H1("Welcome IMS Vaadin 18"),
