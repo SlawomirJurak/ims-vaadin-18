@@ -19,7 +19,13 @@ import pl.sgnit.ims.views.util.ViewConfiguration;
 import java.util.Set;
 
 @PageTitle("Users")
-@ViewConfiguration(id = "users", title = "Administration - Users", path = {"Administration"}, description = "Management of users")
+@ViewConfiguration(
+    id = "users",
+    title = "Administration - Users",
+    path = {"Administration"},
+    description = "Management of users",
+    url = "users"
+)
 public class UsersView extends VerticalLayout implements QueryableView {
 
     private final UserService userService;

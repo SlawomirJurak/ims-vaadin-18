@@ -7,12 +7,15 @@ import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.checkbox.Checkbox;
+import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.listbox.MultiSelectListBox;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.EmailField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.Binder;
+import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.server.VaadinSession;
 import com.vaadin.flow.shared.Registration;
 import pl.sgnit.ims.backend.administration.role.Role;
@@ -21,7 +24,7 @@ import pl.sgnit.ims.backend.administration.user.User;
 import java.util.Set;
 
 public class UserForm extends VerticalLayout {
-    private final Set<Role> roles;
+    private final Set<Role> rolesList;
     private final Binder<User> binder = new BeanValidationBinder<>(User.class);
 
     private final TextField username = new TextField("User name");
@@ -29,14 +32,15 @@ public class UserForm extends VerticalLayout {
     private final TextField firstName = new TextField("First name");
     private final TextField lastName = new TextField("Last name");
     private final Checkbox administrator = new Checkbox("Administrator");
+    private final MultiSelectListBox<Role> grantedRoles = new MultiSelectListBox<>();
 
     private final Button save = new Button("Save");
     private final Button delete = new Button("Delete");
     private final Button cancel = new Button("Cancel");
     private final Button changePassword = new Button("Generate change password link");
 
-    public UserForm(Set<Role> roles) {
-        this.roles = roles;
+    public UserForm(Set<Role> rolesList) {
+        this.rolesList = rolesList;
         binder.bindInstanceFields(this);
         createLayout();
     }
@@ -77,6 +81,7 @@ public class UserForm extends VerticalLayout {
             new HorizontalLayout(username, email),
             new HorizontalLayout(firstName, lastName),
             administrator,
+            grantedRoles,
             createButtonsLayout()
         );
     }
@@ -85,6 +90,18 @@ public class UserForm extends VerticalLayout {
         User loggedUser = VaadinSession.getCurrent().getAttribute(User.class);
 
         administrator.setVisible(loggedUser.getAdministrator());
+        grantedRoles.setWidthFull();
+        grantedRoles.setItems(rolesList);
+        grantedRoles.setRenderer(new ComponentRenderer<>(item -> {
+            Div name = new Div();
+            name.getStyle().set("font-weight", "bold");
+            name.setText(item.getName());
+
+            Div description = new Div();
+            description.getStyle().set("font-size", "12px");
+            description.setText(item.getDescription());
+            return new Div(name, description);
+        }));
     }
 
     private Component createButtonsLayout() {

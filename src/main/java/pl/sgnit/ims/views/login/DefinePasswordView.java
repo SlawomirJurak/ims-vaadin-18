@@ -16,6 +16,9 @@ import java.util.Map;
 
 class DefinePasswordView extends VerticalLayout  implements BeforeEnterObserver {
     private final AuthService authService;
+    private final String title;
+    private final String message;
+    private final String buttonCaption;
 
     private String code;
 
@@ -24,7 +27,22 @@ class DefinePasswordView extends VerticalLayout  implements BeforeEnterObserver 
 
     DefinePasswordView(AuthService authService, String title, String message, String buttonCaption) {
         this.authService = authService;
+        this.title = title;
+        this.message = message;
+        this.buttonCaption = buttonCaption;
+    }
 
+    @Override
+    public void beforeEnter(BeforeEnterEvent beforeEnterEvent) {
+        Map<String, List<String>> params = beforeEnterEvent.getLocation().getQueryParameters().getParameters();
+
+        if (params.get("code")!=null) {
+            code = params.get("code").get(0);
+            createLayout();
+        }
+    }
+
+    private void createLayout() {
         add(
             new H1(title),
             new H4(message),
@@ -35,13 +53,6 @@ class DefinePasswordView extends VerticalLayout  implements BeforeEnterObserver 
                 buttonClickEvent -> setPassword()
             )
         );
-    }
-
-    @Override
-    public void beforeEnter(BeforeEnterEvent beforeEnterEvent) {
-        Map<String, List<String>> params = beforeEnterEvent.getLocation().getQueryParameters().getParameters();
-
-        code = params.get("code").get(0);
     }
 
     private void setPassword() {

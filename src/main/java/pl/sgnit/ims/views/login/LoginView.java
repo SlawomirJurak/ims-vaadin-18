@@ -1,5 +1,6 @@
 package pl.sgnit.ims.views.login;
 
+import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.CssImport;
@@ -29,11 +30,13 @@ public class LoginView extends Div {
         user = new TextField("Username");
         user.setAutofocus(true);
         password = new PasswordField("Password");
+        password.addKeyDownListener(Key.ENTER, keyDownEvent -> authenticateUser());
+        Button loginButton =new Button("Login", event -> authenticateUser());
         add(
             new H1("Welcome IMS Vaadin 18"),
             user,
             password,
-            new Button("Login", event -> authenticateUser())
+            loginButton
         );
     }
 

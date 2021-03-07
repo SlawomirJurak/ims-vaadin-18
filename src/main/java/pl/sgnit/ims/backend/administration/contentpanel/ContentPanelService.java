@@ -1,7 +1,6 @@
 package pl.sgnit.ims.backend.administration.contentpanel;
 
 import com.vaadin.flow.component.Component;
-import com.vaadin.flow.router.PageTitle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -9,7 +8,7 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 import pl.sgnit.ims.views.administration.role.RolesView;
 import pl.sgnit.ims.views.administration.user.UsersView;
-import pl.sgnit.ims.views.calendar.weekscedule.WeekScheduleView;
+import pl.sgnit.ims.views.calendar.weekshcedule.WeekScheduleView;
 import pl.sgnit.ims.views.util.ViewConfiguration;
 
 import java.util.Arrays;
@@ -27,12 +26,12 @@ public class ContentPanelService {
 
     private final ContentPanelRepository contentPanelRepository;
 
-    private List<Class<? extends Component>> contentPanelsClasses;
+    private Set<Class<? extends Component>> contentPanelsClasses;
 
     public ContentPanelService(ContentPanelRepository contentPanelRepository) {
         this.contentPanelRepository = contentPanelRepository;
 
-        contentPanelsClasses = Arrays.asList(
+        contentPanelsClasses = Set.of(
             RolesView.class,
             UsersView.class,
             WeekScheduleView.class
@@ -99,5 +98,15 @@ public class ContentPanelService {
 
     public Set<ContentPanel> findAll() {
         return Set.copyOf(contentPanelRepository.findAll());
+    }
+
+    public Class<? extends Component> getContentPanelClass(String viewId) {
+        return contentPanelsClasses.stream().filter(contentPanelCass -> {
+            return contentPanelCass.getAnnotation(ViewConfiguration.class).id().equals(viewId);
+        }).findFirst().get();
+    }
+
+    public Set<Class<? extends Component>> getContentPanelsClasses() {
+        return Set.copyOf(contentPanelsClasses);
     }
 }

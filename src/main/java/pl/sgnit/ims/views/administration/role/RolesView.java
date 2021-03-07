@@ -15,7 +15,12 @@ import pl.sgnit.ims.backend.administration.role.RoleService;
 import pl.sgnit.ims.views.util.ViewConfiguration;
 
 @PageTitle("Roles")
-@ViewConfiguration(id = "roles", title = "Administration - Roles", path = {"Administration"}, description = "Management of roles")
+@ViewConfiguration(
+    id = "roles",
+    title = "Administration - Roles",
+    path = {"Administration"},
+    description = "Management of roles",
+    url = "roles")
 public class RolesView extends VerticalLayout {
 
     private final RoleService roleService;

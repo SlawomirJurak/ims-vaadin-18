@@ -51,4 +51,13 @@ public class ContentPanel extends EntityTemplate {
     public void setDescription(String description) {
         this.description = description;
     }
+
+    @Override
+    public String toString() {
+        return "ContentPanel{" +
+            "viewId='" + viewId + '\'' +
+            ", title='" + title + '\'' +
+            ", description='" + description + '\'' +
+            '}';
+    }
 }

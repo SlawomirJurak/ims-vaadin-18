@@ -20,11 +20,15 @@ import com.vaadin.flow.data.provider.hierarchy.TreeData;
 import com.vaadin.flow.data.provider.hierarchy.TreeDataProvider;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.RouterLink;
+import com.vaadin.flow.server.VaadinSession;
+import pl.sgnit.ims.backend.administration.user.AuthService;
 import pl.sgnit.ims.views.about.AboutView;
 import pl.sgnit.ims.views.administration.role.RolesView;
 import pl.sgnit.ims.views.administration.user.UsersView;
-import pl.sgnit.ims.views.calendar.weekscedule.WeekScheduleView;
+import pl.sgnit.ims.views.calendar.weekshcedule.WeekScheduleView;
 import pl.sgnit.ims.views.logout.LogoutView;
+
+import java.util.Set;
 
 @CssImport("./styles/views/main/main-view.css")
 @CssImport(value = "./styles/views/main/app-layout.css", themeFor = "vaadin-app-layout")
@@ -122,13 +126,8 @@ public class MainView extends AppLayout {
 
         rootMenuItem = new MenuItem("About", AboutView.class);
         menuItemTreeData.addRootItems(rootMenuItem);
-        rootMenuItem = new MenuItem("Administration", null);
-        item = menuItemTreeData.addRootItems(rootMenuItem);
-        item.addItem(rootMenuItem, new MenuItem("Roles", RolesView.class));
-        item.addItem(rootMenuItem, new MenuItem("Users", UsersView.class));
-        rootMenuItem = new MenuItem("Calendar", null);
-        item = menuItemTreeData.addRootItems(rootMenuItem);
-        item.addItem(rootMenuItem, new MenuItem("Week schedule", WeekScheduleView.class));
+        createAdministrationMenu(menuItemTreeData);
+        createCalendarMenu(menuItemTreeData);
 
         TreeDataProvider<MenuItem> treeDataProvider = new TreeDataProvider<>(menuItemTreeData);
         TreeGrid<MenuItem> menuTree = new TreeGrid<>();
@@ -140,6 +139,44 @@ public class MainView extends AppLayout {
             return createLinkTab(treeItem.getTitle(), treeItem.getNavigationTarget());
         });
         return menuTree;
+    }
+
+    private void createAdministrationMenu(TreeData<MenuItem> menu) {
+        Set<Class<? extends Component>> grantedViews = getGrantedViews();
+
+        if (grantedViews.contains(RolesView.class) || grantedViews.contains(UsersView.class)) {
+            TreeData<MenuItem> treeItem;
+            MenuItem menuItem;
+
+            menuItem = new MenuItem("Administration", null);
+            treeItem = menu.addRootItems(menuItem);
+            if (grantedViews.contains(RolesView.class)) {
+                treeItem.addItem(menuItem, new MenuItem("Roles", RolesView.class));
+            }
+            if (grantedViews.contains(UsersView.class)) {
+                treeItem.addItem(menuItem, new MenuItem("Users", UsersView.class));
+            }
+
+        }
+    }
+
+    private void createCalendarMenu(TreeData<MenuItem> menu) {
+        Set<Class<? extends Component>> grantedViews = getGrantedViews();
+
+        if (grantedViews.contains(WeekScheduleView.class)) {
+            TreeData<MenuItem> treeItem;
+            MenuItem menuItem;
+
+            menuItem = new MenuItem("Calendar", null);
+            treeItem = menu.addRootItems(menuItem);
+            if (grantedViews.contains(WeekScheduleView.class)) {
+                treeItem.addItem(menuItem, new MenuItem("Week schedule", WeekScheduleView.class));
+            }
+        }
+    }
+
+    private Set<Class<? extends Component>> getGrantedViews() {
+        return (Set<Class<? extends Component>>) VaadinSession.getCurrent().getAttribute(AuthService.GRANTED_VIEWS);
     }
 
     @Override

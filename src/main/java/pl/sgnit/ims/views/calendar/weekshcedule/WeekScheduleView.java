@@ -1,4 +1,4 @@
-package pl.sgnit.ims.views.calendar.weekscedule;
+package pl.sgnit.ims.views.calendar.weekshcedule;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Text;
@@ -21,7 +21,8 @@ import pl.sgnit.ims.views.util.ViewConfiguration;
 @ViewConfiguration(id = "week schedule",
     title = "Calendar - Week Schedule",
     description = "Define week schedule which day is business or off",
-    path = {"Calendar"}
+    path = {"Calendar"},
+    url = "weekSchedule"
 )
 public class WeekScheduleView extends VerticalLayout {
 
