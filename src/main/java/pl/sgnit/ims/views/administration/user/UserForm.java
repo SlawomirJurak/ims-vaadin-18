@@ -59,10 +59,10 @@ public class UserForm extends VerticalLayout {
         changePassword.setVisible(!newEntity);
         if (!newEntity) {
             if (Boolean.TRUE.equals(loggedUser.getAdministrator())) {
-                delete.setEnabled(user!=null && !user.equals(loggedUser));
+                delete.setEnabled(user != null && !user.equals(loggedUser));
                 administrator.setEnabled(delete.isEnabled());
             } else {
-                boolean canEdit = user!=null && !user.getAdministrator();
+                boolean canEdit = user != null && !user.getAdministrator();
 
                 firstName.setEnabled(canEdit);
                 lastName.setEnabled(canEdit);

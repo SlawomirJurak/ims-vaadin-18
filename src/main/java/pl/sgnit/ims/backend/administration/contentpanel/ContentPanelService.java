@@ -62,12 +62,12 @@ public class ContentPanelService {
         });
 
         String nonUniquePanels = contentPanelsNames.entrySet().stream()
-            .filter(entry -> entry.getValue()>1)
+            .filter(entry -> entry.getValue() > 1)
             .map(entry -> {
-                return entry.getKey()+"="+entry.getValue();
+                return entry.getKey() + "=" + entry.getValue();
             }).collect(Collectors.joining(","));
         if (!nonUniquePanels.isEmpty()) {
-            throw new RuntimeException("Non unique panels: "+nonUniquePanels);
+            throw new RuntimeException("Non unique panels: " + nonUniquePanels);
         }
         logger.info("Uniqueness of panels checked");
     }
