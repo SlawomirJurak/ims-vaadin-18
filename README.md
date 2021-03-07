@@ -1,14 +1,15 @@
 # IMS Vaadin 18 - Integrated Management System
 
-Program jest tworzony przy użyciu:
+Used technologies:
 - Spring Boot
 - Vaadin
 - PostgreSql
 
-Zadaniem tego programu będzie zarządzenie różnego rodzaju informacją.
+Main goal of this program is to manage different type of information. 
 
-Moduły programu:
-- role
-- użytkownicy
+Pogram modules:
+- Roles - define roles
+- Users - create users and grant roles to them
+- Calendar - create calendars (under development)
 
-Powyższa lista modułów będzie z czasem rozwijana.
+List of modules will be extended.
